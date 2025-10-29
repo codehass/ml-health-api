@@ -49,3 +49,40 @@ def metric_model(y_test, y_pred):
     f1 = f1_score(y_test, y_pred)
 
     return accuracy, precision, recall, f1
+
+
+def train_with_grid_search(model_type, num_list):
+
+    X_train, X_test, y_train, y_test = split_data(data, target="status")
+
+    param_grid_rfc = {
+        "model__criterion": ["gini", "entropy"],
+        "model__n_estimators": [10, 50, 100, 250, 500],
+        "model__max_features": ["sqrt", "log2"],
+        "feature_selection__k": [3, 5, "all"],
+    }
+
+    param_grid_knn = {
+        "model__n_neighbors": [3, 5, 7, 9, 11],
+        "model__weights": ["uniform", "distance"],
+        "model__metric": ["minkowski", "euclidean", "manhattan"],
+        "feature_selection__k": [3, 5, "all"],
+    }
+
+    if model_type == "random_forest":
+        param_grid = param_grid_rfc
+        model = RandomForestClassifier()
+    elif model_type == "knn":
+        param_grid = param_grid_knn
+        model = KNeighborsClassifier()
+
+    pipeline = model_pipeline(num_list, model)
+
+    grid_search = GridSearchCV(estimator=pipeline, param_grid=param_grid, n_jobs=-1)
+    grid_search.fit(X_train, y_train)
+
+    best_model = grid_search.best_estimator_
+
+    y_pred = best_model.predict(X_test)
+
+    return metric_model(y_test, y_pred)
