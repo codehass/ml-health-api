@@ -51,7 +51,7 @@ def metric_model(y_test, y_pred):
     return accuracy, precision, recall, f1
 
 
-def train_with_grid_search(model_type, num_list):
+def train_with_grid_search(model_type, num_list, data):
 
     X_train, X_test, y_train, y_test = split_data(data, target="status")
 
