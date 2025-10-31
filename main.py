@@ -70,10 +70,12 @@ async def read_patient(patient_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Patient not found")
     return db_patient
 
+
 @app.get("/patients/")
 async def read_patients(db: Session = Depends(get_db)):
     patients = db.query(Patient).all()
     return {"patients": patients}
+
 
 @app.get("/patients/{patient_id}/predict_risk")
 async def predict_risk(patient_id: int, db: Session = Depends(get_db)):
@@ -83,11 +85,13 @@ async def predict_risk(patient_id: int, db: Session = Depends(get_db)):
     if db_patient.status == 0:
         risk = "Negatif"
     elif db_patient.status == 1:
-        risk = "Psitif" 
+        risk = "Psitif"
     else:
         risk = "not found"
 
     return {"patient_id": patient_id, "status": risk}
 
 
-
+@app.get("/")
+async def root():
+    return {"message": "Hello to Cardio Risk Prediction API"}
