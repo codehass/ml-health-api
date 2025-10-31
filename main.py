@@ -14,7 +14,7 @@ model = joblib.load("./ml/random_forest_model.dump")
 
 
 @app.post("/patients/", response_model=PatientResponse)
-async def create_item(patient: PatientCreate, db: Session = Depends(get_db)):
+async def create_(patient: PatientCreate, db: Session = Depends(get_db)):
 
     patient_features = pd.DataFrame(
         [
@@ -74,4 +74,20 @@ async def read_patient(patient_id: int, db: Session = Depends(get_db)):
 async def read_patients(db: Session = Depends(get_db)):
     patients = db.query(Patient).all()
     return {"patients": patients}
+
+@app.get("/patients/{patient_id}/predict_risk")
+async def predict_risk(patient_id: int, db: Session = Depends(get_db)):
+    db_patient = db.query(Patient).filter(Patient.id == patient_id).first()
+    if db_patient is None:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    if db_patient.status == 0:
+        risk = "Negatif"
+    elif db_patient.status == 1:
+        risk = "Psitif" 
+    else:
+        risk = "not found"
+
+    return {"patient_id": patient_id, "status": risk}
+
+
 
