@@ -13,6 +13,7 @@ Base.metadata.create_all(bind=engine)
 model = joblib.load("./ml/random_forest_model.dump")
 
 
+# Create a new patient
 @app.post("/patients/", response_model=PatientResponse)
 async def create_(patient: PatientCreate, db: Session = Depends(get_db)):
 
@@ -63,6 +64,7 @@ async def create_(patient: PatientCreate, db: Session = Depends(get_db)):
     return db_patient
 
 
+# Get a patient by ID
 @app.get("/patients/{patient_id}", response_model=PatientResponse)
 async def read_patient(patient_id: int, db: Session = Depends(get_db)):
     db_patient = db.query(Patient).filter(Patient.id == patient_id).first()
@@ -71,12 +73,14 @@ async def read_patient(patient_id: int, db: Session = Depends(get_db)):
     return db_patient
 
 
+# Get all patients
 @app.get("/patients/")
 async def read_patients(db: Session = Depends(get_db)):
     patients = db.query(Patient).all()
     return {"patients": patients}
 
 
+# Predict risk for a patient
 @app.get("/patients/{patient_id}/predict_risk")
 async def predict_risk(patient_id: int, db: Session = Depends(get_db)):
     db_patient = db.query(Patient).filter(Patient.id == patient_id).first()
