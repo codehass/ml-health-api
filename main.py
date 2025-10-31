@@ -69,3 +69,9 @@ async def read_patient(patient_id: int, db: Session = Depends(get_db)):
     if db_patient is None:
         raise HTTPException(status_code=404, detail="Patient not found")
     return db_patient
+
+@app.get("/patients/")
+async def read_patients(db: Session = Depends(get_db)):
+    patients = db.query(Patient).all()
+    return {"patients": patients}
+
