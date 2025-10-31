@@ -7,10 +7,9 @@ from sklearn.model_selection import train_test_split
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from pipeline import model_pipeline, split_data
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-
+import joblib
 
 def split_data(data, target, test_size=0.2, random_state=42):
     X = data.drop(columns=[target], axis=1)
@@ -82,7 +81,8 @@ def train_with_grid_search(model_type, num_list, data):
     grid_search.fit(X_train, y_train)
 
     best_model = grid_search.best_estimator_
-
+    if model_type == "random_forest":
+        joblib.dump(best_model,"best_random_forest_model.dump")
     y_pred = best_model.predict(X_test)
 
     return metric_model(y_test, y_pred)
