@@ -82,7 +82,7 @@ def train_with_grid_search(model_type, num_list, data):
 
     best_model = grid_search.best_estimator_
     if model_type == "random_forest":
-        joblib.dump(best_model,"best_random_forest_model.dump")
+        joblib.dump(best_model,"random_forest_model.dump")
     y_pred = best_model.predict(X_test)
 
     return metric_model(y_test, y_pred)

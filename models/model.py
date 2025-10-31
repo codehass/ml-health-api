@@ -18,7 +18,6 @@ class Patient(Base):
     impluse = Column(Integer)
 
 class PatientCreate(BaseModel):
-    
     gender :  Literal[0, 1]
     age : int =Field(..., ge=1, le=120)
     pressurehight : int =Field(..., ge=0)
@@ -29,8 +28,7 @@ class PatientCreate(BaseModel):
     impluse : int =Field(..., ge=0)
 
 
-class PatientResponse(BaseModel):
+class PatientResponse(PatientCreate):
     id: int
     status : int = Literal[0, 1]
-
-   
+    
