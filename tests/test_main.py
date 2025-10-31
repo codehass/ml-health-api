@@ -13,6 +13,7 @@ def client():
     return TestClient(app)
 
 
+# thi is a sample test
 def test_with_fixture(client):
     response = client.get("/patients/1/predict_risk")
     assert response.status_code == 200
